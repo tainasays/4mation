@@ -14,14 +14,14 @@ function createBoard() {
             cell.classList.add('cell');
             cell.dataset.row = row;
             cell.dataset.col = col;
-            cell.addEventListener('click', handleCellClick);
+            cell.addEventListener('click', cellClick);
             board.appendChild(cell);
         }
     }
     updateMessage();
 }
 
-function handleCellClick(event) {
+function cellClick(event) {
     const cell = event.target;
     const row = parseInt(cell.dataset.row);
     const col = parseInt(cell.dataset.col);
@@ -32,28 +32,28 @@ function handleCellClick(event) {
 
     boardState[row][col] = currentPlayer;
     cell.classList.add(currentPlayer);
-
+    
     lastMove = { row, col };
-
-    // Atualiza a mensagem e destaca as jogadas válidas antes de verificar a vitória ou empate
-    updateMessage();
+    
+    // atualiza movimentos válidos
     highlightValidMoves();
-
-    // Verifica a vitória ou empate após atualizar a interface
+    
+    // verifica vitória ou empate
     setTimeout(() => {
         if (checkWin(row, col)) {
             message.textContent = `${currentPlayer === 'blue' ? 'Azul' : 'Vermelho'} venceu!`;
-            board.querySelectorAll('.cell').forEach(cell => cell.removeEventListener('click', handleCellClick));
+            board.querySelectorAll('.cell').forEach(cell => cell.removeEventListener('click', cellClick));
             return;
         }
-
+        
         if (isBoardFull()) {
             message.textContent = 'Empate!';
-            board.querySelectorAll('.cell').forEach(cell => cell.removeEventListener('click', handleCellClick));
+            board.querySelectorAll('.cell').forEach(cell => cell.removeEventListener('click', cellClick));
             return;
         }
-
+        
         currentPlayer = currentPlayer === 'blue' ? 'red' : 'blue';
+        updateMessage();
     }, 100);
 }
 
@@ -81,7 +81,7 @@ function highlightValidMoves() {
         }
     });
 }
-
+// atualiza mensagem
 function updateMessage() {
     message.textContent = `Vez do jogador: ${currentPlayer === 'blue' ? 'Azul' : 'Vermelho'}`;
 }
@@ -138,4 +138,3 @@ restartButton.addEventListener('click', restartGame);
 
 createBoard();
 highlightValidMoves();
-// agora precisa atualizar a parte das mensagens! estao incorretas.
